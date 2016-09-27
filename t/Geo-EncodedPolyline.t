@@ -91,6 +91,49 @@ test {
   done $c;
 } n => 2;
 
+for (
+  [-0.000001, '?'],
+  [-179.9832104, '`~oia@'],
+  [53.926935, 'krchI'],
+  [53.92696, 'orchI'],
+) {
+  my ($input, $expected) = @$_;
+  test {
+    my $c = shift;
+    my $x = Geo::EncodedPolyline->encode ([[$input]], 1e5);
+    is $x, $expected;
+    done $c;
+  } n => 1;
+}
+
+for (
+  [[[38.5, -120.2], [40.7, -120.95]], '_p~iF~ps|U_ulLnnqC'],
+  [[
+    [53.92694, 10.24444],
+    [53.92696, 10.24645],
+    [53.92713, 10.24852],
+    [53.92746, 10.25056],
+    [53.92806, 10.25324],
+    [53.92851, 10.25511],
+    [53.92922, 10.25800],
+    [53.93009, 10.26135],
+    [53.93083, 10.26395],
+    [53.93167, 10.26630],
+    [53.93273, 10.26926],
+    [53.93321, 10.27112],
+  ], 'krchIwzo}@CqKa@}KaAwKwBwOyAuJmCaQmD}SsCgOgDuMsEoQ_BsJ'],
+) {
+  my ($input, $expected) = @$_;
+  test {
+    my $c = shift;
+    my $x = Geo::EncodedPolyline->encode ($input, 1e5);
+    is $x, $expected;
+    my $y = Geo::EncodedPolyline->decode ($x, 2, 1e5);
+    is Dumper ($y), Dumper ($input);
+    done $c;
+  } n => 2;
+}
+
 run_tests;
 
 =head1 LICENSE
@@ -99,5 +142,11 @@ Copyright 2016 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
+
+Some tests are copied from
+<http://cpansearch.perl.org/src/RRWO/Geo-Google-PolylineEncoder-0.06/t/>:
+
+  Copyright (c) 2008-2010 Steve Purkis. Released under the same terms
+  as Perl itself.
 
 =cut
