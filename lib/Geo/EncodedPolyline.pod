@@ -1,0 +1,73 @@
+=head1 NAME
+
+Geo::EncodedPolyline - Encoding and decoding of encoded polylines
+
+=head1 SYNOPSIS
+
+  use Geo::EncodedPolyline;
+  warn Geo::EncodedPolyline->encode ([[$lat, $lon], ...], 1e5);
+  warn Dumper Geo::EncodedPolyline->decode ($input, 2, 1e5);
+
+=head1 DESCRIPTION
+
+The C<Geo::EncodedPolyline> module implements the Encoded Polyline
+Algorithm as used by Google Maps and other map applications.
+
+=head1 METHODS
+
+Following methods are available:
+
+=over 4
+
+=item $encoded = Geo::EncodedPolyline->encode ($decoded, $f)
+
+Encodes the list of items and returns the result string.
+
+The first argument must be an array reference of array references,
+where the inner arrays must contain same numbers of items.  Each item
+of the inner arrays must be numbers.
+
+To encode a list of pairs of latitude and longitude, as used by Google
+Maps, specify the list of latitude and longitude (both in decimal), as
+an array reference of array references, and the factor value C<1e5>,
+as the arguments.
+
+=item $decoded = Geo::EncodedPolyline->decode ($encoded, $n, $f)
+
+Decodes the encoded polyline string and returns the result list.
+
+The second argument represents the number of the items in each pair.
+
+To decode a polyline encoded list of pairs of latitude and longitude,
+as used by Google Maps, specify the encoded string, the number of
+items in each pair C<2> (i.e. latitude and longitude), and the factor
+value C<1e5>.
+
+The method returns an array reference of array references, where inner
+arrays represent the pairs in the list.  When the input is broken, the
+returned list might be incomplete.
+
+=back
+
+Please note that the factor value I<$f> affects the precision of
+encoded numbers, i.e. whether the original value can be obtained by
+encoding a number and then decoding its result.  When C<$n * $f> is an
+integer, the exact number C<$n> can be obtained.
+
+=head1 SPECIFICATION
+
+Encoded Polyline Algorithm Format
+<https://developers.google.com/maps/documentation/utilities/polylinealgorithm>.
+
+=head1 AUTHOR
+
+Wakaba <wakaba@suikawiki.org>.
+
+=head1 LICENSE
+
+Copyright 2016 Wakaba <wakaba@suikawiki.org>.
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
+
+=cut

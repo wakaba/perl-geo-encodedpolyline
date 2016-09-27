@@ -134,6 +134,34 @@ for (
   } n => 2;
 }
 
+test {
+  my $c = shift;
+  my $x = Geo::EncodedPolyline->decode ('', 2, 1e5);
+  is Dumper ($x), Dumper ([]);
+  done $c;
+} n => 1, name => 'empty decode';
+
+test {
+  my $c = shift;
+  my $x = Geo::EncodedPolyline->decode ("a\x{5000}", 2, 1e5);
+  is Dumper ($x), Dumper ([]);
+  done $c;
+} n => 1, name => 'invalid decode';
+
+test {
+  my $c = shift;
+  my $x = Geo::EncodedPolyline->decode ("\x{5000}", 2, 1e5);
+  is Dumper ($x), Dumper ([]);
+  done $c;
+} n => 1, name => 'invalid decode';
+
+test {
+  my $c = shift;
+  my $x = Geo::EncodedPolyline->decode ("?\x{5000}", 2, 1e5);
+  is Dumper ($x), Dumper ([[0]]);
+  done $c;
+} n => 1, name => 'invalid decode';
+
 run_tests;
 
 =head1 LICENSE
