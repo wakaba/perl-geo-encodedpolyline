@@ -59,6 +59,11 @@ integer, the exact number C<$n> can be obtained.
 Encoded Polyline Algorithm Format
 <https://developers.google.com/maps/documentation/utilities/polylinealgorithm>.
 
+=head1 SEE ALSO
+
+SuikaWiki: Encoded Polyline
+<https://wiki.suikawiki.org/n/Encoded%20Polyline>.
+
 =head1 AUTHOR
 
 Wakaba <wakaba@suikawiki.org>.
