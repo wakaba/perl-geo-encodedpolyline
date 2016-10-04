@@ -5,8 +5,12 @@ use lib glob path (__FILE__)->parent->parent->child ('t_deps/modules/*/lib');
 use Test::X1;
 use Test::More;
 use Geo::EncodedPolyline;
-use Data::Dumper;
-$Data::Dumper::Useqq = 1;
+
+sub _s ($) {
+  return join "\n", map {
+    join "\t", map { 0+$_ } @$_;
+  } @{$_[0]};
+} # _s
 
 test {
   my $c = shift;
@@ -20,7 +24,7 @@ test {
   is $output, 'ku|nEn`faVGvxq`@';
 
   my $restored = Geo::EncodedPolyline->decode ($output, 2, 1e5);
-  is Dumper ($restored), Dumper ($input);
+  is _s ($restored), _s ($input);
 
   done $c;
 } n => 2;
@@ -37,7 +41,7 @@ test {
   is $output, 'EB';
 
   my $restored = Geo::EncodedPolyline->decode ($output, 1, 1e0);
-  is Dumper ($restored), Dumper ($input);
+  is _s ($restored), _s ($input);
 
   done $c;
 } n => 2;
@@ -54,7 +58,7 @@ test {
   is $output, '______GEKgEB?';
 
   my $restored = Geo::EncodedPolyline->decode ($output, 3, 1);
-  is Dumper ($restored), Dumper ($input);
+  is _s ($restored), _s ($input);
 
   done $c;
 } n => 2;
@@ -70,7 +74,7 @@ test {
   is $output, '_p~iF~ps|U_ulLnnqC_mqNvxq`@';
 
   my $restored = Geo::EncodedPolyline->decode ($output, 2, 1e5);
-  is Dumper ($restored), Dumper ($input);
+  is _s ($restored), _s ($input);
 
   done $c;
 } n => 2;
@@ -86,7 +90,7 @@ test {
   is $output, 'AE@';
 
   my $restored = Geo::EncodedPolyline->decode ($output, 1, 1e0);
-  is Dumper ($restored), Dumper ($input);
+  is _s ($restored), _s ($input);
 
   done $c;
 } n => 2;
@@ -129,7 +133,7 @@ for (
     my $x = Geo::EncodedPolyline->encode ($input, 1e5);
     is $x, $expected;
     my $y = Geo::EncodedPolyline->decode ($x, 2, 1e5);
-    is Dumper ($y), Dumper ($input);
+    is _s ($y), _s ($input);
     done $c;
   } n => 2;
 }
@@ -137,28 +141,28 @@ for (
 test {
   my $c = shift;
   my $x = Geo::EncodedPolyline->decode ('', 2, 1e5);
-  is Dumper ($x), Dumper ([]);
+  is _s ($x), _s ([]);
   done $c;
 } n => 1, name => 'empty decode';
 
 test {
   my $c = shift;
   my $x = Geo::EncodedPolyline->decode ("a\x{5000}", 2, 1e5);
-  is Dumper ($x), Dumper ([]);
+  is _s ($x), _s ([]);
   done $c;
 } n => 1, name => 'invalid decode';
 
 test {
   my $c = shift;
   my $x = Geo::EncodedPolyline->decode ("\x{5000}", 2, 1e5);
-  is Dumper ($x), Dumper ([]);
+  is _s ($x), _s ([]);
   done $c;
 } n => 1, name => 'invalid decode';
 
 test {
   my $c = shift;
   my $x = Geo::EncodedPolyline->decode ("?\x{5000}", 2, 1e5);
-  is Dumper ($x), Dumper ([[0]]);
+  is _s ($x), _s ([[0]]);
   done $c;
 } n => 1, name => 'invalid decode';
 
