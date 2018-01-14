@@ -4,8 +4,8 @@ use warnings;
 our $VERSION = '1.0';
 use POSIX qw(floor);
 
-sub _encode ($$) {
-  my $v = floor (($_[0] * $_[1]) + 0.5);
+sub _encode ($) {
+  my $v = $_[0];
   my $negative = $v < 0;
   if ($negative) {
     $v = (~(-$v)) + 1;
@@ -39,8 +39,9 @@ sub encode ($$$) {
 
   for my $pt (@$points) {
     for (0..($n-1)) {
-      push @r, _encode ($pt->[$_] - $current->[$_], $f);
-      $current->[$_] = $pt->[$_];
+      my $v = floor ((($pt->[$_] - $current->[$_]) * $f) + 0.5);
+      push @r, _encode $v;
+      $current->[$_] += $v / $f;
     }
   }
 
@@ -82,7 +83,7 @@ sub decode ($$$$) {
 
 =head1 LICENSE
 
-Copyright 2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2016-2018 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.

@@ -166,11 +166,32 @@ test {
   done $c;
 } n => 1, name => 'invalid decode';
 
+test {
+  my $c = shift;
+  my $in = path (__FILE__)->parent->parent->child ('t_deps/data1.pl');
+  my $out = path (__FILE__)->parent->parent->child ('t_deps/data1.ep');
+  $in = do {
+    no strict;
+    eval $in->slurp;
+  } or die $@;
+  $out = $out->slurp;
+  $out =~ s/\s+//g;
+
+  my $encoded = Geo::EncodedPolyline->encode ($in, 1e5);
+  is $encoded, $out;
+
+  my $decoded = Geo::EncodedPolyline->decode ($encoded, 2, 1e5);
+  my $reencoded = Geo::EncodedPolyline->encode ($decoded, 1e5);
+  is $reencoded, $encoded;
+
+  done $c;
+} n => 2, name => 'larger data';
+
 run_tests;
 
 =head1 LICENSE
 
-Copyright 2016 Wakaba <wakaba@suikawiki.org>.
+Copyright 2016-2018 Wakaba <wakaba@suikawiki.org>.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
@@ -180,5 +201,7 @@ Some tests are copied from
 
   Copyright (c) 2008-2010 Steve Purkis. Released under the same terms
   as Perl itself.
+
+Thanks to jkondo and OND Inc. for providing test data.
 
 =cut
